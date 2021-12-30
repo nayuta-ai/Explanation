@@ -130,3 +130,5 @@ dmypy.json
 
 # others
 .data
+pytorch
+.tmp_results

@@ -1,5 +1,5 @@
 TIMESTAMP=`date +%Y-%m-%d_%H-%M-%S`
-TMP_RESULTS_DIR="$(pwd)/tmp_results/${TIMESTAMP}"
+TMP_RESULTS_DIR="$(pwd)/.tmp_results/${TIMESTAMP}"
 ARGS_FILE="${TMP_RESULTS_DIR}/args.yaml"
 TRAIN_LOG_FILE="${TMP_RESULTS_DIR}/log.txt"
 mkdir -p $TMP_RESULTS_DIR

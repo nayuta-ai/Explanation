@@ -1,28 +1,22 @@
-import sys
-import traceback
-
-import comet_ml
+from comet_ml import Experiment
 import pytorch_lightning as pl
 import torch
 
 from pytorch_lightning.loggers import CometLogger
 from pytorch_lightning.callbacks import ModelCheckpoint
 
-from contextlib import redirect_stdout
-from os.path import join
-from shutil import rmtree
-
 from config import update_args, parse_console
 from data import get_dataloader
 from data.dataset import get_dataset
 from models import get_model
 
+
 def main(
-    args, 
-    args_file_path: str, 
-    tmp_results_dir: str, 
+    args,
+    args_file_path: str,
+    tmp_results_dir: str,
     train_log_file_path: str
-    ) -> None:
+) -> None:
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
     # data
@@ -53,9 +47,9 @@ def main(
     ).to(device)
 
     comet_logger = CometLogger(
-        api_key=args.COMET.API_KEY, 
-        project_name=args.COMET.PROJECT_NAME, 
-        workspace=args.COMET.WORKSPACE, 
+        api_key=args.COMET.API_KEY,
+        project_name=args.COMET.PROJECT_NAME,
+        workspace=args.COMET.WORKSPACE,
     )
 
     checkpoint_callback = ModelCheckpoint(monitor='validation_accuracy')
@@ -68,13 +62,8 @@ def main(
         max_epochs=args.TRAIN.MAX_EPOCHS,
         replace_sampler_ddp=False,
     )
-    
     trainer.fit(model, train_dataloader, validation_dataloader)
-    with open(args_file_path, 'w') as f:
-        with redirect_stdout(f):
-            print(args.dump())
 
-    rmtree(tmp_results_dir, ignore_errors=True)
 
 if __name__ == '__main__':
     option = parse_console()
